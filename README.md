@@ -1,12 +1,12 @@
 ## Ujian Tengah Semester Mata Kuliah Pemrograman Bergerak Universitas Sriwijaya 
 **Kelompok 5 — Aplikasi Pencarian Buku dengan OpenLibrary API**
 
----
 
-## Deskripsi Proyek
+
+## Deskripsi Project
 Aplikasi Android berbasis Java yang memungkinkan pengguna untuk mencari informasi buku melalui **[OpenLibrary API](https://openlibrary.org/developers/api)**.  
 
----
+
 
 ## Anggota Kelompok 5
 | Nama | NIM | 
