@@ -1,5 +1,4 @@
-## Ujian Tengah Semester Mata Kuliah Pemrograman Bergerak  
-### Universitas Sriwijaya  
+# Ujian Tengah Semester Mata Kuliah Pemrograman Bergerak Universitas Sriwijaya
 
 **Kelompok 5 — Aplikasi Pencarian Buku dengan OpenLibrary API**
 
