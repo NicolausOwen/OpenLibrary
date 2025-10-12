@@ -13,9 +13,9 @@ Aplikasi Android berbasis Java yang memungkinkan pengguna untuk mencari informas
 | Nama | NIM |
 |------|-----|
 | Nicolaus Owen Marvell | 09031182328003 |
-| [Nama Anggota 2] | [NIM] |
-| [Nama Anggota 3] | [NIM] |
-| [Nama Anggota 4] | [NIM] |
-| [Nama Anggota 5] | [NIM] |
+| Muhammad Rafif AR | 09031382328127 |
+| Nawirah Athqiyah | 09031382328166 |
+| Merizka Azzahra | 09031382328156 |
+| Muhammad Emirshah Yusuf | 09031282328085 |
 
 ---
