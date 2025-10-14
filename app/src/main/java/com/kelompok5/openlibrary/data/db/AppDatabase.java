@@ -4,9 +4,13 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+
 import com.kelompok5.openlibrary.data.model.Book;
+import com.kelompok5.openlibrary.utils.Converters;
 
 @Database(entities = {Book.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract BookDao bookDao();
 
