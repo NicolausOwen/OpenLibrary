@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:gravity="center_horizontal">
+
+    <!-- Book Cover -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="110dp"
+        android:layout_height="160dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:id="@+id/imgBookCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_upcoming"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Book Title -->
+    <TextView
+        android:id="@+id/tvBookTitle"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="The Art of ..."
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:layout_marginBottom="2dp"/>
+
+    <!-- Author Name -->
+    <TextView
+        android:id="@+id/tvAuthorName"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="Sun Tzu"
+        android:textSize="11sp"
+        android:textColor="#999999"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"/>
+
+</LinearLayout>

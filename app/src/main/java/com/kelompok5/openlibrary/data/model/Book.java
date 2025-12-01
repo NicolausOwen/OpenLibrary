@@ -4,29 +4,85 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.google.gson.annotations.SerializedName;
 import com.kelompok5.openlibrary.utils.Converters;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity(tableName = "books")
 public class Book {
+
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int localId;
+
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("author_name")
     @TypeConverters(Converters.class)
-    private List<String> author_name;
-    private int first_publish_year;
-    private int cover_i;
+    private List<String> authorName;
 
-    public int getId() { return id; }
-    public String getTitle() { return title; }
-    public List<String> getAuthor_name() { return author_name; }
-    public int getFirst_publish_year() { return first_publish_year; }
-    public int getCover_i() { return cover_i; }
+    @SerializedName("first_publish_year")
+    private Integer firstPublishYear;
 
-    public void setId(int id) { this.id = id; }
-    public void setTitle(String title) { this.title = title; }
-    public void setAuthor_name(List<String> author_name) { this.author_name = author_name; }
-    public void setFirst_publish_year(int first_publish_year) { this.first_publish_year = first_publish_year; }
-    public void setCover_i(int cover_i) { this.cover_i = cover_i; }
+    @SerializedName("cover_i")
+    private Integer coverId;
+
+    @SerializedName("key")
+    private String workKey;
+
+    public int getLocalId() {
+        return localId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<String> getAuthorName() {
+        return authorName;
+    }
+
+    public Integer getFirstPublishYear() {
+        return firstPublishYear;
+    }
+
+    public Integer getCoverId() {
+        return coverId;
+    }
+
+    public String getWorkKey() {
+        return workKey;
+    }
+
+    public String getWorkId() {
+        if (workKey == null) return null;
+        return workKey.replace("/works/", "");
+    }
+
+    public void setLocalId(int localId) {
+        this.localId = localId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthorName(List<String> authorName) {
+        this.authorName = authorName;
+    }
+
+    public void setFirstPublishYear(Integer firstPublishYear) {
+        this.firstPublishYear = firstPublishYear;
+    }
+
+    public void setCoverId(Integer coverId) {
+        this.coverId = coverId;
+    }
+
+    public void setWorkKey(String workKey) {
+        this.workKey = workKey;
+    }
+
 }

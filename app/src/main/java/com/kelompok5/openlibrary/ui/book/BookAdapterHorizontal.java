@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,62 +17,56 @@ import com.kelompok5.openlibrary.data.model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
+public class BookAdapterHorizontal extends RecyclerView.Adapter<BookAdapterHorizontal.ViewHolder> {
 
     private final Context context;
     private List<Book> books = new ArrayList<>();
 
-    public BookAdapter(Context context) {
+    public BookAdapterHorizontal(Context context) {
         this.context = context;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setBooks(List<Book> list) {
+        this.books = list;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_book, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_book_horizontal, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Book book = books.get(position);
 
-        holder.title.setText(book.getTitle());
+        Book b = books.get(position);
+        holder.title.setText(b.getTitle());
 
-        // Author Name
-        if (book.getAuthorName() != null && !book.getAuthorName().isEmpty()) {
-            holder.author.setText(book.getAuthorName().get(0));
+        if (b.getAuthorName() != null && !b.getAuthorName().isEmpty()) {
+            holder.author.setText(b.getAuthorName().get(0));
         } else {
-            holder.author.setText("Unknown Author");
+            holder.author.setText("Unknown");
         }
 
-        // Cover Image
-        if (book.getCoverId() != null) {
-            String imageUrl = "https://covers.openlibrary.org/b/id/" + book.getCoverId() + "-M.jpg";
+        Integer coverId = b.getCoverId(); // <-- Integer (bisa null)
 
+        if (coverId != null && coverId != 0) {
+            String img = "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
             Glide.with(context)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.ic_nowplaying)
+                    .load(img)
+                    .placeholder(R.drawable.ic_upcoming)   // aman
                     .into(holder.cover);
         } else {
             holder.cover.setImageResource(R.drawable.ic_upcoming);
         }
-
-        // Item Click
-        holder.itemView.setOnClickListener(v ->
-                Toast.makeText(context, "Selected: " + book.getTitle(), Toast.LENGTH_SHORT).show()
-        );
     }
+
 
     @Override
     public int getItemCount() {
-        return books != null ? books.size() : 0;
+        return books.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

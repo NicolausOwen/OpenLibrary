@@ -7,12 +7,25 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.kelompok5.openlibrary.data.model.Book;
+import com.kelompok5.openlibrary.data.model.FavoriteBook;
+import com.kelompok5.openlibrary.data.model.HistoryBook;
 import com.kelompok5.openlibrary.utils.Converters;
 
-@Database(entities = {Book.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {
+                Book.class,
+                FavoriteBook.class,
+                HistoryBook.class
+        },
+        version = 1,
+        exportSchema = false
+)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
+
     public abstract BookDao bookDao();
+    public abstract FavoriteDao favoriteDao();
+    public abstract HistoryDao historyDao();
 
     private static volatile AppDatabase INSTANCE;
 
