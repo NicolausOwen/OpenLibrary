@@ -16,11 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.kelompok5.openlibrary.R;
-import com.kelompok5.openlibrary.data.model.Book;
 import com.kelompok5.openlibrary.data.model.BookDetail;
 import com.kelompok5.openlibrary.data.model.HistoryBook;
-
-import java.util.ArrayList;
 
 public class BookDetailActivity extends AppCompatActivity {
 
@@ -54,20 +51,20 @@ public class BookDetailActivity extends AppCompatActivity {
         getIntentData();
         setupObservers();
 
-        // Load detail
+        // Load detail dari API
         viewModel.loadBookDetail(workId);
 
-        // Add to history automatically
+        // Add to history automatically (FIX: Tambahkan parameter kosong untuk description)
         viewModel.addToHistory(
                 new HistoryBook(
                         workId,
                         passedTitle,
-                        "",
+                        "",             // Author (kosong dulu)
+                        "",             // Description (kosong dulu) -> FIX AGAR TIDAK ERROR
                         passedCoverId,
                         System.currentTimeMillis()
                 )
         );
-
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -86,7 +83,6 @@ public class BookDetailActivity extends AppCompatActivity {
         });
     }
 
-
     private void initViews() {
         imgCover = findViewById(R.id.imgBookCover);
         tvTitle = findViewById(R.id.tvBookTitle);
@@ -97,7 +93,6 @@ public class BookDetailActivity extends AppCompatActivity {
         btnReadNow = findViewById(R.id.btnReadNow);
         progressBar = findViewById(R.id.progressBar);
     }
-
 
     private void getIntentData() {
         workId = getIntent().getStringExtra(EXTRA_WORK_ID);
@@ -112,10 +107,9 @@ public class BookDetailActivity extends AppCompatActivity {
         tvTitle.setText(passedTitle);
     }
 
-
     private void setupObservers() {
 
-        // 1. Observe FAVORITES (check if current book is already favorite)
+        // 1. Observe FAVORITES
         viewModel.getFavorites().observe(this, favs -> {
             isFavorite = favs.stream().anyMatch(f -> f.getId().equals(workId));
             btnFavorite.setImageResource(isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
@@ -130,37 +124,58 @@ public class BookDetailActivity extends AppCompatActivity {
 
             // Author
             String a = detail.getFirstAuthor();
-            tvAuthor.setText(a != null ? a : "Unknown");
+            tvAuthor.setText(a != null ? a : "Unknown Author");
 
             // Description
             String desc = detail.getDescriptionText();
             tvDescription.setText(desc != null ? desc : "No description available");
 
-            // Cover (prefer detail cover)
+            // Cover (prefer detail cover if available)
+            Integer finalCoverId = passedCoverId;
             if (detail.getCovers() != null && !detail.getCovers().isEmpty()) {
-                String url = "https://covers.openlibrary.org/b/id/" +
-                        detail.getCovers().get(0) + "-L.jpg";
+                finalCoverId = detail.getCovers().get(0);
+                String url = "https://covers.openlibrary.org/b/id/" + finalCoverId + "-L.jpg";
                 Glide.with(this).load(url).into(imgCover);
             }
 
-            // Read Now button
-            btnReadNow.setOnClickListener(v -> {
-                viewModel.loadReadLink(workId);
-            });
-        });
+            // Update History dengan Data Lengkap (Deskripsi & Author)
+            // Ini penting supaya di Home nanti ada deskripsinya
+            viewModel.addToHistory(
+                    new HistoryBook(
+                            workId,
+                            detail.getTitle(),
+                            a != null ? a : "",
+                            desc != null ? desc : "", // Simpan Deskripsi
+                            finalCoverId,
+                            System.currentTimeMillis()
+                    )
+            );
 
-        // 3. Observe READ LINK
-        viewModel.getReadLink().observe(this, url -> {
-            if (url != null) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            } else {
-                Toast.makeText(this, "No preview available", Toast.LENGTH_SHORT).show();
-            }
+            // ============================================
+            // 3. LOGIC TOMBOL READ NOW (DIRECT WEB)
+            // ============================================
+            btnReadNow.setOnClickListener(v -> {
+                // Bersihkan ID jika ada prefix "/works/" agar URL tidak double
+                String cleanId = workId.replace("/works/", "");
+
+                // URL Web Open Library
+                String webUrl = "https://openlibrary.org/works/" + cleanId;
+
+                // Buka Browser
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    Toast.makeText(this, "No browser found", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         // 4. Loading
         viewModel.isLoading().observe(this, isLoading -> {
             progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
+
+        // Note: Observer getReadLink() dihapus karena kita pakai link manual
     }
 }

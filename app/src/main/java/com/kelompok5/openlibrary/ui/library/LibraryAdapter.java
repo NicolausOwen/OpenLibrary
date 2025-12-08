@@ -61,7 +61,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
             workId = b.getId();
             if (b.getTitle() != null) title = b.getTitle();
             if (b.getAuthor() != null) author = b.getAuthor();
-            cover = b.getCover();
+            cover = b.getCoverId();
         }
 
         holder.title.setText(title);

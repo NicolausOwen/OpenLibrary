@@ -55,7 +55,9 @@ public class BookViewModel extends AndroidViewModel {
     public LiveData<Boolean> isLoading() { return loading; }
     public LiveData<String> getError() { return error; }
 
-    // SEARCH
+    // ==========================================
+    // SEARCH (OPTIMIZED)
+    // ==========================================
     public void searchBooks(String query) {
         loading.setValue(true);
 
@@ -103,11 +105,13 @@ public class BookViewModel extends AndroidViewModel {
         });
     }
 
-
     // CATEGORY
     public void loadCategoryBooks(String category) {
         loading.setValue(true);
-        apiRepo.search(category, new BookApiRepository.Result<BookResponse>() {
+        // Sama seperti search, filter kategori juga
+        String finalQuery = category + "&has_fulltext=true";
+
+        apiRepo.search(finalQuery, new BookApiRepository.Result<BookResponse>() {
             @Override
             public void success(BookResponse data) {
                 categoryBooks.postValue(data.getDocs());
@@ -158,31 +162,57 @@ public class BookViewModel extends AndroidViewModel {
         });
     }
 
-    // ADD HISTORY from Book
+    // ==========================================
+    // ADD HISTORY (DIPERBAIKI)
+    // ==========================================
+
+    // Dari Search Result (Book)
     public void addToHistory(Book book) {
         String author = "";
-
         if (book.getAuthorName() != null && !book.getAuthorName().isEmpty()) {
             author = book.getAuthorName().get(0);
+        }
+
+        // Ambil Cover ID dengan aman
+        Integer coverVal = 0;
+        if (book.getCoverId() != null) {
+            coverVal = book.getCoverId();
         }
 
         fireRepo.addHistory(new HistoryBook(
                 book.getWorkId(),
                 book.getTitle(),
                 author,
-                book.getCoverId(),
+                "",          // <--- FIX: Tambahkan string kosong untuk Description
+                coverVal,
                 System.currentTimeMillis()
         ));
     }
 
-    // ADD HISTORY from HistoryBook (Detail Page)
+    // Dari Detail Page (HistoryBook object)
     public void addToHistory(HistoryBook hb) {
         fireRepo.addHistory(hb);
     }
 
-    // ADD Favorite from Detail Page
-    public void addToFavorites(BookDetail detail, String workId) {
+    // Dari Detail Page (BookDetail object) - Opsional / Legacy
+    public void addDetailHistory(BookDetail detail, String workId) {
+        Integer cover = (detail.getCovers() != null && !detail.getCovers().isEmpty())
+                ? detail.getCovers().get(0) : 0;
 
+        String desc = detail.getDescriptionText() != null ? detail.getDescriptionText() : "";
+
+        fireRepo.addHistory(new HistoryBook(
+                workId,
+                detail.getTitle(),
+                detail.getFirstAuthor(),
+                desc,        // <--- FIX: Masukkan deskripsi jika ada
+                cover,
+                System.currentTimeMillis()
+        ));
+    }
+
+    // ADD FAVORITE
+    public void addToFavorites(BookDetail detail, String workId) {
         Integer cover = (detail.getCovers() != null && !detail.getCovers().isEmpty())
                 ? detail.getCovers().get(0) : 0;
 
@@ -191,19 +221,6 @@ public class BookViewModel extends AndroidViewModel {
                 detail.getTitle(),
                 detail.getFirstAuthor(),
                 cover
-        ));
-    }
-
-    public void addDetailHistory(BookDetail detail, String workId) {
-        Integer cover = (detail.getCovers() != null && !detail.getCovers().isEmpty())
-                ? detail.getCovers().get(0) : 0;
-
-        fireRepo.addHistory(new HistoryBook(
-                workId,
-                detail.getTitle(),
-                detail.getFirstAuthor(),
-                cover,
-                System.currentTimeMillis()
         ));
     }
 
