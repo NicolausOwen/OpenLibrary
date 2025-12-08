@@ -28,7 +28,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     }
 
     public void setBooks(List<Object> list) {
-        this.books = list;
+        this.books = list != null ? list : new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -38,7 +38,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         View v = LayoutInflater.from(context).inflate(R.layout.item_library_book, parent, false);
         return new ViewHolder(v);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder holder, int position) {
@@ -51,21 +50,13 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         if (obj instanceof FavoriteBook) {
             FavoriteBook b = (FavoriteBook) obj;
             if (b.getTitle() != null) title = b.getTitle();
-
-            if (b.getAuthorName() != null && !b.getAuthorName().isEmpty()) {
-                author = b.getAuthorName().get(0);
-            }
-
-            cover = b.getCoverId();
+            if (b.getAuthor() != null) author = b.getAuthor();    // <-- pakai getAuthor()
+            cover = b.getCover();                                 // <-- pakai getCover()
         } else if (obj instanceof HistoryBook) {
             HistoryBook b = (HistoryBook) obj;
             if (b.getTitle() != null) title = b.getTitle();
-
-            if (b.getAuthorName() != null && !b.getAuthorName().isEmpty()) {
-                author = b.getAuthorName().get(0);
-            }
-
-            cover = b.getCoverId();
+            if (b.getAuthor() != null) author = b.getAuthor();    // <-- pakai getAuthor()
+            cover = b.getCover();                                 // <-- pakai getCover()
         }
 
         holder.title.setText(title);
@@ -76,6 +67,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
             Glide.with(context)
                     .load(img)
                     .placeholder(R.drawable.ic_upcoming)
+                    .error(R.drawable.ic_upcoming)
                     .into(holder.cover);
         } else {
             holder.cover.setImageResource(R.drawable.ic_upcoming);
@@ -99,5 +91,3 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         }
     }
 }
-
-

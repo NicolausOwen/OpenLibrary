@@ -9,26 +9,31 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.kelompok5.openlibrary.data.model.Book;
 import com.kelompok5.openlibrary.data.model.BookDetail;
+import com.kelompok5.openlibrary.data.model.BookResponse;
+import com.kelompok5.openlibrary.data.model.EditionResponse;
 import com.kelompok5.openlibrary.data.model.FavoriteBook;
 import com.kelompok5.openlibrary.data.model.HistoryBook;
-import com.kelompok5.openlibrary.data.repository.BookRepository;
+import com.kelompok5.openlibrary.data.model.SubjectResponse;
+import com.kelompok5.openlibrary.data.repository.BookApiRepository;
+import com.kelompok5.openlibrary.data.repository.FirestoreRepository;
 
 import java.util.List;
 
 public class BookViewModel extends AndroidViewModel {
 
-    private final BookRepository repository;
+    // API + Firestore
+    private final BookApiRepository apiRepository;
+    private final FirestoreRepository firestoreRepository;
 
-    // ==========================
-    // LiveData utama
-    // ==========================
-    private final LiveData<List<Book>> books;              // Search & trending
+    // LiveData API
+    private final MutableLiveData<List<Book>> books = new MutableLiveData<>();
     private final MutableLiveData<List<Book>> categoryBooks = new MutableLiveData<>();
     private final MutableLiveData<BookDetail> bookDetail = new MutableLiveData<>();
     private final MutableLiveData<String> readLink = new MutableLiveData<>();
 
-    private final LiveData<List<FavoriteBook>> favorites;          // From Room
-    private final LiveData<List<HistoryBook>> history;            // From Room
+    // Firestore LiveData
+    private final LiveData<List<FavoriteBook>> favorites;
+    private final LiveData<List<HistoryBook>> history;
 
     // UI State
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
@@ -37,71 +42,63 @@ public class BookViewModel extends AndroidViewModel {
 
     public BookViewModel(@NonNull Application app) {
         super(app);
-        repository = new BookRepository(app);
 
-        // LiveData Room
-        books = repository.getBooks();        // all searched / trending data
-        favorites = repository.getFavorites();
-        history = repository.getHistory();
+        apiRepository = new BookApiRepository();
+        firestoreRepository = new FirestoreRepository();
+
+        favorites = firestoreRepository.getFavorites();
+        history = firestoreRepository.getHistory();
     }
 
-    // ============================================
-    // GETTER UNTUK FRAGMENT
-    // ============================================
-    public LiveData<List<Book>> getBooks()       { return books; }
+    // Getters
+    public LiveData<List<Book>> getBooks() { return books; }
     public LiveData<List<Book>> getCategoryBooks() { return categoryBooks; }
-    public LiveData<BookDetail> getBookDetail()  { return bookDetail; }
-    public LiveData<String> getReadLink()        { return readLink; }
+    public LiveData<BookDetail> getBookDetail() { return bookDetail; }
+    public LiveData<String> getReadLink() { return readLink; }
 
-    public LiveData<List<FavoriteBook>> getFavorites()   { return favorites; }
-    public LiveData<List<HistoryBook>> getHistory()     { return history; }
+    public LiveData<List<FavoriteBook>> getFavorites() { return favorites; }
+    public LiveData<List<HistoryBook>> getHistory() { return history; }
 
-    public LiveData<Boolean> isLoading()         { return isLoading; }
-    public LiveData<String> getError()           { return error; }
+    public LiveData<Boolean> isLoading() { return isLoading; }
+    public LiveData<String> getError() { return error; }
 
-    // ============================================
-    // 1. TRENDING (Home)
-    // ============================================
-    public void loadTrending() {
-        searchBooks("trending");
-    }
 
     // ============================================
-    // 2. SEARCH
+    // 1. SEARCH BOOKS
     // ============================================
     public void searchBooks(String query) {
         isLoading.setValue(true);
 
-        repository.searchBooks(query, new BookRepository.SimpleCallback() {
+        apiRepository.search(query, new BookApiRepository.Result<BookResponse>() {
             @Override
-            public void onSuccess() {
+            public void success(BookResponse data) {
+                books.postValue(data.getDocs());
                 isLoading.postValue(false);
             }
 
             @Override
-            public void onError(String msg) {
+            public void error(String msg) {
                 error.postValue(msg);
                 isLoading.postValue(false);
             }
         });
     }
 
-
     // ============================================
-    // 3. CATEGORY RESULT (Subjects API)
+    // 2. CATEGORY BOOKS
     // ============================================
     public void loadCategoryBooks(String category) {
         isLoading.setValue(true);
 
-        repository.fetchBooksByCategory(category, new BookRepository.BookListCallback() {
+        apiRepository.search(category, new BookApiRepository.Result<BookResponse>() {
             @Override
-            public void onSuccess(List<Book> list) {
-                categoryBooks.postValue(list);
+            public void success(BookResponse data) {
+                categoryBooks.postValue(data.getDocs());
                 isLoading.postValue(false);
             }
 
             @Override
-            public void onError(String msg) {
+            public void error(String msg) {
                 error.postValue(msg);
                 isLoading.postValue(false);
             }
@@ -109,20 +106,20 @@ public class BookViewModel extends AndroidViewModel {
     }
 
     // ============================================
-    // 4. DETAIL PAGE
+    // 3. DETAIL PAGE
     // ============================================
     public void loadBookDetail(String workId) {
         isLoading.setValue(true);
 
-        repository.fetchBookDetail(workId, new BookRepository.DetailCallback() {
+        apiRepository.detail(workId, new BookApiRepository.Result<BookDetail>() {
             @Override
-            public void onSuccess(BookDetail detail) {
-                bookDetail.postValue(detail);
+            public void success(BookDetail data) {
+                bookDetail.postValue(data);
                 isLoading.postValue(false);
             }
 
             @Override
-            public void onError(String msg) {
+            public void error(String msg) {
                 error.postValue(msg);
                 isLoading.postValue(false);
             }
@@ -130,19 +127,20 @@ public class BookViewModel extends AndroidViewModel {
     }
 
     // ============================================
-    // 5. READ PAGE (Edition API)
+    // 4. READ PAGE (EDITION API)
     // ============================================
     public void loadReadLink(String olid) {
         isLoading.setValue(true);
-        repository.fetchReadLink(olid, new BookRepository.ReadCallback() {
+
+        apiRepository.read(olid, new BookApiRepository.Result<EditionResponse>() {
             @Override
-            public void onSuccess(String link) {
-                readLink.postValue(link);
+            public void success(EditionResponse data) {
+                readLink.postValue(data.getReadUrl());
                 isLoading.postValue(false);
             }
 
             @Override
-            public void onError(String msg) {
+            public void error(String msg) {
                 error.postValue(msg);
                 isLoading.postValue(false);
             }
@@ -150,17 +148,42 @@ public class BookViewModel extends AndroidViewModel {
     }
 
     // ============================================
-    // 6. FAVORITES & HISTORY (Room)
+    // 5. FIRESTORE FAVORITES + HISTORY
     // ============================================
     public void addToFavorites(Book book) {
-        repository.insertFavorite(book);
+        String author = "";
+        if (book.getAuthorName() != null && !book.getAuthorName().isEmpty()) {
+            author = book.getAuthorName().get(0);   // ambil author pertama
+        }
+
+        firestoreRepository.addFavorite(
+                new FavoriteBook(
+                        book.getWorkId(),
+                        book.getTitle(),
+                        author,
+                        book.getCoverId()
+                )
+        );
+    }
+
+    public void removeFavorite(String workId) {
+        firestoreRepository.removeFavorite(workId);
     }
 
     public void addToHistory(Book book) {
-        repository.insertHistory(book);
-    }
+        String author = "";
+        if (book.getAuthorName() != null && !book.getAuthorName().isEmpty()) {
+            author = book.getAuthorName().get(0);
+        }
 
-    public void removeFavorite(Book book) {
-        repository.deleteFavorite(book);
+        firestoreRepository.addHistory(
+                new HistoryBook(
+                        book.getWorkId(),
+                        book.getTitle(),
+                        author,
+                        book.getCoverId(),
+                        System.currentTimeMillis()
+                )
+        );
     }
 }

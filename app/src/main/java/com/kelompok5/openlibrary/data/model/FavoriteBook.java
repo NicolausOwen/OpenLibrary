@@ -1,44 +1,22 @@
 package com.kelompok5.openlibrary.data.model;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import com.kelompok5.openlibrary.utils.Converters;
-
-import java.util.List;
-
-@Entity(tableName = "favorite_books")
 public class FavoriteBook {
-
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
+    private String id;        // workId
     private String title;
+    private String author;
+    private Integer cover;
 
-    @TypeConverters(Converters.class)
-    private List<String> authorName;
+    public FavoriteBook() {} // Firestore needs empty constructor
 
-    private Integer coverId;
-
-    private String workId;
-
-    public FavoriteBook(String title, List<String> authorName, Integer coverId, String workId) {
+    public FavoriteBook(String id, String title, String author, Integer cover) {
+        this.id = id;
         this.title = title;
-        this.authorName = authorName;
-        this.coverId = coverId;
-        this.workId = workId;
+        this.author = author;
+        this.cover = cover;
     }
 
-    public int getId() { return id; }
+    public String getId() { return id; }
     public String getTitle() { return title; }
-    public List<String> getAuthorName() { return authorName; }
-    public Integer getCoverId() { return coverId; }
-    public String getWorkId() { return workId; }
-
-    public void setId(int id) { this.id = id; }
-    public void setTitle(String title) { this.title = title; }
-    public void setAuthorName(List<String> authorName) { this.authorName = authorName; }
-    public void setCoverId(Integer coverId) { this.coverId = coverId; }
-    public void setWorkId(String workId) { this.workId = workId; }
+    public String getAuthor() { return author; }
+    public Integer getCover() { return cover; }
 }

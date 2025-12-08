@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "499470106052",
+    "project_id": "openlibrary-49f01",
+    "storage_bucket": "openlibrary-49f01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499470106052:android:77b54bb9048f097f0cf891",
+        "android_client_info": {
+          "package_name": "com.kelompok5.openlibrary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcrqxD13QR8fDUKeiKKwpWOSlBw3xc4a8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
