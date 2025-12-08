@@ -24,6 +24,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.setting.AccountSettingsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
 
