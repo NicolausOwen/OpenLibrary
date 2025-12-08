@@ -1,12 +1,12 @@
 package com.kelompok5.openlibrary.ui.book;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,33 +42,41 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Book book = books.get(position);
 
         holder.title.setText(book.getTitle());
 
-        // Author Name
+        // Author
         if (book.getAuthorName() != null && !book.getAuthorName().isEmpty()) {
             holder.author.setText(book.getAuthorName().get(0));
         } else {
             holder.author.setText("Unknown Author");
         }
 
-        // Cover Image
-        if (book.getCoverId() != null) {
-            String imageUrl = "https://covers.openlibrary.org/b/id/" + book.getCoverId() + "-M.jpg";
+        // Cover
+        if (book.getCoverId() != null && book.getCoverId() != 0) {
+            String img = "https://covers.openlibrary.org/b/id/" + book.getCoverId() + "-M.jpg";
 
             Glide.with(context)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.ic_nowplaying)
+                    .load(img)
+                    .placeholder(R.drawable.ic_upcoming)
                     .into(holder.cover);
         } else {
             holder.cover.setImageResource(R.drawable.ic_upcoming);
         }
 
-        // Item Click
-        holder.itemView.setOnClickListener(v ->
-                Toast.makeText(context, "Selected: " + book.getTitle(), Toast.LENGTH_SHORT).show()
-        );
+        // ============================
+        // OPEN BOOK DETAIL
+        // ============================
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra(BookDetailActivity.EXTRA_WORK_ID, book.getWorkId());
+            intent.putExtra(BookDetailActivity.EXTRA_TITLE, book.getTitle());
+            intent.putExtra(BookDetailActivity.EXTRA_COVER_ID, book.getCoverId() != null ? book.getCoverId() : 0);
+            context.startActivity(intent);
+        });
+
     }
 
     @Override

@@ -16,5 +16,7 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav" />
+        app:menu="@menu/bottom_nav"
+        app:itemIconTint="@color/pink"
+        app:itemTextColor="@color/pink" />
 </LinearLayout>

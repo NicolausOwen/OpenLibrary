@@ -1,6 +1,7 @@
 package com.kelompok5.openlibrary.ui.book;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +35,15 @@ public class BookAdapterHorizontal extends RecyclerView.Adapter<BookAdapterHoriz
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_book_horizontal, parent, false);
-        return new ViewHolder(view);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_book_horizontal, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Book b = books.get(position);
+
         holder.title.setText(b.getTitle());
 
         if (b.getAuthorName() != null && !b.getAuthorName().isEmpty()) {
@@ -50,23 +52,33 @@ public class BookAdapterHorizontal extends RecyclerView.Adapter<BookAdapterHoriz
             holder.author.setText("Unknown");
         }
 
-        Integer coverId = b.getCoverId(); // <-- Integer (bisa null)
+        Integer cover = b.getCoverId();
 
-        if (coverId != null && coverId != 0) {
-            String img = "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
+        if (cover != null && cover != 0) {
+            String url = "https://covers.openlibrary.org/b/id/" + cover + "-M.jpg";
             Glide.with(context)
-                    .load(img)
-                    .placeholder(R.drawable.ic_upcoming)   // aman
+                    .load(url)
+                    .placeholder(R.drawable.ic_upcoming)
                     .into(holder.cover);
         } else {
             holder.cover.setImageResource(R.drawable.ic_upcoming);
         }
-    }
 
+        // ============================
+        // OPEN DETAIL PAGE
+        // ============================
+        holder.itemView.setOnClickListener(v -> {
+            Intent i = new Intent(context, BookDetailActivity.class);
+            i.putExtra(BookDetailActivity.EXTRA_WORK_ID, b.getWorkId());
+            i.putExtra(BookDetailActivity.EXTRA_TITLE, b.getTitle());
+            i.putExtra(BookDetailActivity.EXTRA_COVER_ID, cover != null ? cover : 0);
+            context.startActivity(i);
+        });
+    }
 
     @Override
     public int getItemCount() {
-        return books.size();
+        return books != null ? books.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

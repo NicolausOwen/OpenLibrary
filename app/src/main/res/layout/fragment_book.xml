@@ -30,13 +30,6 @@
                 android:gravity="end"
                 android:layout_marginBottom="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12:30"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:layout_marginEnd="8dp"/>
             </LinearLayout>
 
             <!-- Greeting -->
