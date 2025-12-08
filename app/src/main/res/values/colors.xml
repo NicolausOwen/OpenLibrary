@@ -13,4 +13,9 @@
     <color name="onPrimaryColor">#FFFFFF</color>
     <color name="primaryButton">#FF2E75</color>
     <color name="onPrimaryButton">#FFFFFF</color>
+    <color name="pink_primary">#FF4081</color>
+    <color name="pink_light">#FF69B4</color>
+    <color name="text_primary">#333333</color>
+    <color name="icon_secondary">#666666</color>
+    <color name="divider_gray">#F0F0F0</color>
 </resources>

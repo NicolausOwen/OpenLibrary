@@ -1,0 +1,13 @@
+<resources>
+    <string-array name="dummy_dob_array">
+        <item>23/05/1995</item>
+        <item>01/01/2000</item>
+        <item>05/10/1998</item>
+    </string-array>
+
+    <string-array name="dummy_country_array">
+        <item>Indonesia</item>
+        <item>Malaysia</item>
+        <item>Singapore</item>
+    </string-array>
+</resources>
