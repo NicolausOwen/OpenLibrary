@@ -119,49 +119,40 @@ public class BookDetailActivity extends AppCompatActivity {
         viewModel.getBookDetail().observe(this, detail -> {
             if (detail == null) return;
 
-            // Title
+            // Update Tampilan Detail
             tvTitle.setText(detail.getTitle());
+            String authorName = detail.getFirstAuthor() != null ? detail.getFirstAuthor() : "Unknown Author";
+            tvAuthor.setText(authorName);
 
-            // Author
-            String a = detail.getFirstAuthor();
-            tvAuthor.setText(a != null ? a : "Unknown Author");
+            // Ambil Deskripsi
+            String descText = detail.getDescriptionText() != null ? detail.getDescriptionText() : "No description available.";
+            tvDescription.setText(descText);
 
-            // Description
-            String desc = detail.getDescriptionText();
-            tvDescription.setText(desc != null ? desc : "No description available");
-
-            // Cover (prefer detail cover if available)
+            // Ambil Cover ID Terbaik dari API
             Integer finalCoverId = passedCoverId;
             if (detail.getCovers() != null && !detail.getCovers().isEmpty()) {
                 finalCoverId = detail.getCovers().get(0);
+
+                // Update gambar di halaman detail
                 String url = "https://covers.openlibrary.org/b/id/" + finalCoverId + "-L.jpg";
                 Glide.with(this).load(url).into(imgCover);
             }
 
-            // Update History dengan Data Lengkap (Deskripsi & Author)
-            // Ini penting supaya di Home nanti ada deskripsinya
-            viewModel.addToHistory(
-                    new HistoryBook(
-                            workId,
-                            detail.getTitle(),
-                            a != null ? a : "",
-                            desc != null ? desc : "", // Simpan Deskripsi
-                            finalCoverId,
-                            System.currentTimeMillis()
-                    )
-            );
+            // === [FIX] SIMPAN KE HISTORY DISINI (AGAR DATA LENGKAP) ===
+            // Kita menimpa data history lama dengan data baru yang ada deskripsi & cover benarnya
+            viewModel.addToHistory(new HistoryBook(
+                    workId,
+                    detail.getTitle(),
+                    authorName,
+                    descText,     // <--- Simpan Deskripsi ke History
+                    finalCoverId, // <--- Simpan Cover ID yang valid
+                    System.currentTimeMillis()
+            ));
 
-            // ============================================
-            // 3. LOGIC TOMBOL READ NOW (DIRECT WEB)
-            // ============================================
+            // Logic Tombol Read
             btnReadNow.setOnClickListener(v -> {
-                // Bersihkan ID jika ada prefix "/works/" agar URL tidak double
                 String cleanId = workId.replace("/works/", "");
-
-                // URL Web Open Library
                 String webUrl = "https://openlibrary.org/works/" + cleanId;
-
-                // Buka Browser
                 try {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));
                     startActivity(browserIntent);

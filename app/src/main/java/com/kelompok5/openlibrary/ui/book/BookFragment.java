@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,21 +18,27 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.kelompok5.openlibrary.R;
 import com.kelompok5.openlibrary.data.model.Book;
-
-// === IMPORT ACTIVITY TUJUAN SUDAH DIAKTIFKAN ===
+import com.kelompok5.openlibrary.data.model.HistoryBook;
 import com.kelompok5.openlibrary.ui.search.SearchActivity;
-import com.kelompok5.openlibrary.ui.category.CategoryResultActivity; // Pastikan package ini benar
+import com.kelompok5.openlibrary.ui.category.CategoryResultActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BookFragment extends Fragment {
 
     private BookViewModel viewModel;
     private RecyclerView rvHorizontalBooks;
+
+    // UI Continue Reading
     private CardView cardContinue;
+    private ImageView imgContinueCover;
+    private TextView tvContinueTitle, tvContinueDesc;
+
     private BookAdapterHorizontal horizontalAdapter;
     private List<Book> allBooks = new ArrayList<>();
 
@@ -42,36 +50,47 @@ public class BookFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_book, container, false);
 
-        // =============================
-        // 1. NAVIGASI SEARCH
-        // =============================
+        // ============================================
+        // 1. INIT VIEW COMPONENTS
+        // ============================================
+        // Continue Reading Components (Sekarang ID-nya sudah ada di XML)
+        cardContinue = view.findViewById(R.id.cardContinueReading);
+        imgContinueCover = view.findViewById(R.id.imgContinueCover);
+        tvContinueTitle = view.findViewById(R.id.tvContinueTitle);
+        tvContinueDesc = view.findViewById(R.id.tvContinueDesc);
+
+        // Recycler View Horizontal
+        rvHorizontalBooks = view.findViewById(R.id.rvBooksHorizontal);
+
+        // ============================================
+        // 2. NAVIGASI SEARCH
+        // ============================================
         CardView cvSearchTrigger = view.findViewById(R.id.cvSearchTrigger);
         cvSearchTrigger.setOnClickListener(v -> {
-            // === INTENT SEARCH SUDAH AKTIF ===
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             startActivity(intent);
         });
 
-        // =============================
-        // 2. NAVIGASI KATEGORI
-        // =============================
+        // ============================================
+        // 3. NAVIGASI KATEGORI
+        // ============================================
         setupCategoryClicks(view);
 
-        // =============================
-        // SETUP RECYCLER HORIZONTAL
-        // =============================
-        rvHorizontalBooks = view.findViewById(R.id.rvBooksHorizontal);
+        // ============================================
+        // 4. SETUP RECYCLER VIEW
+        // ============================================
         rvHorizontalBooks.setLayoutManager(
                 new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false)
         );
         horizontalAdapter = new BookAdapterHorizontal(getContext());
         rvHorizontalBooks.setAdapter(horizontalAdapter);
 
-        // =============================
-        // VIEWMODEL & DATA
-        // =============================
+        // ============================================
+        // 5. VIEWMODEL & OBSERVERS
+        // ============================================
         viewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
+        // A. Observe List Buku Horizontal (Recommendation)
         viewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
             if (books != null) {
                 allBooks = books;
@@ -79,48 +98,85 @@ public class BookFragment extends Fragment {
             }
         });
 
-        viewModel.getError().observe(getViewLifecycleOwner(), err -> {
-            if (err != null) {
-                Toast.makeText(getContext(), err, Toast.LENGTH_SHORT).show();
+        // B. Observe History untuk Continue Reading
+        viewModel.getHistory().observe(getViewLifecycleOwner(), historyList -> {
+            if (historyList != null && !historyList.isEmpty()) {
+
+                cardContinue.setVisibility(View.VISIBLE);
+
+                // Sortir history terbaru
+                List<HistoryBook> sortedList = new ArrayList<>(historyList);
+                Collections.sort(sortedList, (b1, b2) -> Long.compare(b2.getTimestamp(), b1.getTimestamp()));
+
+                HistoryBook latestBook = sortedList.get(0);
+
+                // 1. Set Judul
+                tvContinueTitle.setText(latestBook.getTitle());
+
+                // 2. Set Deskripsi (FITUR BARU)
+                if (latestBook.getDescription() != null && !latestBook.getDescription().isEmpty()) {
+                    tvContinueDesc.setText(latestBook.getDescription());
+                } else {
+                    // Fallback jika deskripsi kosong, tampilkan author
+                    tvContinueDesc.setText("By " + latestBook.getAuthor());
+                }
+
+                // 3. Set Cover (FIX GAMBAR TIDAK MUNCUL)
+                // Pastikan Glide dipanggil dengan URL yang benar
+                if (latestBook.getCoverId() != null && latestBook.getCoverId() > 0) {
+                    String coverUrl = "https://covers.openlibrary.org/b/id/" + latestBook.getCoverId() + "-M.jpg";
+
+                    Glide.with(this)
+                            .load(coverUrl)
+                            .placeholder(R.drawable.ic_upcoming) // Gambar sementara loading
+                            .error(R.drawable.ic_upcoming)       // Gambar jika error
+                            .into(imgContinueCover);
+                } else {
+                    imgContinueCover.setImageResource(R.drawable.ic_upcoming);
+                }
+
+                // 4. Klik Card
+                cardContinue.setOnClickListener(v -> {
+                    Intent intent = new Intent(getContext(), BookDetailActivity.class);
+                    intent.putExtra(BookDetailActivity.EXTRA_WORK_ID, latestBook.getId());
+                    intent.putExtra(BookDetailActivity.EXTRA_TITLE, latestBook.getTitle());
+                    intent.putExtra(BookDetailActivity.EXTRA_COVER_ID, latestBook.getCoverId());
+                    startActivity(intent);
+                });
+
+            } else {
+                cardContinue.setVisibility(View.GONE);
             }
         });
 
-        // Load data awal
+        // C. Observe Error
+        viewModel.getError().observe(getViewLifecycleOwner(), err -> {
+            if (err != null) {
+                // Toast.makeText(getContext(), err, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Load data awal untuk list horizontal (misal: programming)
         viewModel.searchBooks("programming");
 
         return view;
     }
 
     private void setupCategoryClicks(View view) {
-        // Action & Adventure
-        LinearLayout catAction = view.findViewById(R.id.cat_action);
-        if (catAction != null) {
-            catAction.setOnClickListener(v -> openCategoryResult("Actions & Adventure"));
-        }
-
-        // Antiques
-        LinearLayout catAntiques = view.findViewById(R.id.cat_antiques);
-        if (catAntiques != null) {
-            catAntiques.setOnClickListener(v -> openCategoryResult("Antiques"));
-        }
-
-        // Business
-        LinearLayout catBusiness = view.findViewById(R.id.cat_business);
-        if (catBusiness != null) {
-            catBusiness.setOnClickListener(v -> openCategoryResult("Business & Economics"));
-        }
-
-        // Computer
-        LinearLayout catComputer = view.findViewById(R.id.cat_computer);
-        if (catComputer != null) {
-            catComputer.setOnClickListener(v -> openCategoryResult("Computer"));
-        }
+        setCatClick(view, R.id.cat_action, "Actions & Adventure");
+        setCatClick(view, R.id.cat_antiques, "Antiques");
+        setCatClick(view, R.id.cat_business, "Business & Economics");
+        setCatClick(view, R.id.cat_computer, "Computer");
     }
 
-    private void openCategoryResult(String categoryName) {
-        // === INTENT CATEGORY SUDAH AKTIF ===
-        Intent intent = new Intent(getActivity(), CategoryResultActivity.class);
-        intent.putExtra("EXTRA_CATEGORY_NAME", categoryName);
-        startActivity(intent);
+    private void setCatClick(View parent, int id, String categoryName) {
+        LinearLayout layout = parent.findViewById(id);
+        if (layout != null) {
+            layout.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), CategoryResultActivity.class);
+                intent.putExtra("EXTRA_CATEGORY_NAME", categoryName);
+                startActivity(intent);
+            });
+        }
     }
 }
