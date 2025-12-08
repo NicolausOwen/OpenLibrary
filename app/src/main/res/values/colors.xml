@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="pink">#E91E63</color>
     <color name="gray">#777777</color>
+    <color name="primaryColor">#FF4D6D</color>
+    <color name="onPrimaryColor">#FFFFFF</color>
+    <color name="primaryButton">#FF2E75</color>
+    <color name="onPrimaryButton">#FFFFFF</color>
 </resources>
