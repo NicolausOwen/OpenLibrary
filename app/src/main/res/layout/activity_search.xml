@@ -76,7 +76,7 @@
                 android:id="@+id/tv_label_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category"
+                android:text="Search"
                 android:textColor="#E91E63"
                 android:textStyle="bold"
                 android:textSize="18sp"

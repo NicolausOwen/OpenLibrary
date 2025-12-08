@@ -1,5 +1,8 @@
 package com.kelompok5.openlibrary.ui.book;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -49,6 +52,31 @@ public class BookFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_book, container, false);
+
+        // =============================
+        // 0. SETUP GREETING USER (BARU)
+        // =============================
+        TextView tvGreeting = view.findViewById(R.id.tvGreeting);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String name = currentUser.getDisplayName();
+
+            // Jika Display Name kosong, ambil dari Email (misal: emir@gmail.com -> Emir)
+            if (name == null || name.isEmpty()) {
+                String email = currentUser.getEmail();
+                if (email != null) {
+                    name = email.split("@")[0]; // Ambil kata sebelum @
+                    // Bikin huruf pertama kapital (Opsional)
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                }
+            }
+
+            // Set Text ke TextView
+            if (name != null) {
+                tvGreeting.setText("Hi, " + name);
+            }
+        }
 
         // ============================================
         // 1. INIT VIEW COMPONENTS
@@ -167,6 +195,12 @@ public class BookFragment extends Fragment {
         setCatClick(view, R.id.cat_antiques, "Antiques");
         setCatClick(view, R.id.cat_business, "Business & Economics");
         setCatClick(view, R.id.cat_computer, "Computer");
+
+        setCatClick(view, R.id.cat_design, "Design");
+        setCatClick(view, R.id.cat_education, "Education");
+        setCatClick(view, R.id.cat_fiction, "Fiction");
+
+        setCatClick(view, R.id.cat_see_all, "");
     }
 
     private void setCatClick(View parent, int id, String categoryName) {

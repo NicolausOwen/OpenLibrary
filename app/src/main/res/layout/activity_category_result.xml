@@ -61,6 +61,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/btn_filter_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All Books"
@@ -69,9 +70,12 @@
                     android:backgroundTint="#E91E63"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="8dp"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <TextView
+                    android:id="@+id/btn_filter_popular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Popular"
@@ -79,16 +83,21 @@
                     android:background="@drawable/bottom_border_edittext"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="8dp"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <TextView
+                    android:id="@+id/btn_filter_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New"
                     android:textColor="#757575"
                     android:background="@drawable/bottom_border_edittext"
                     android:paddingHorizontal="20dp"
-                    android:paddingVertical="8dp"/>
+                    android:paddingVertical="8dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>

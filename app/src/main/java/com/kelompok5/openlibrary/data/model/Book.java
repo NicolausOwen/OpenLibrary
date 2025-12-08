@@ -7,10 +7,11 @@ import androidx.room.TypeConverters;
 import com.google.gson.annotations.SerializedName;
 import com.kelompok5.openlibrary.utils.Converters;
 
+import java.io.Serializable; // PENTING: Import ini
 import java.util.List;
 
 @Entity(tableName = "books")
-public class Book {
+public class Book implements Serializable { // PENTING: Tambahkan implements Serializable
 
     @PrimaryKey(autoGenerate = true)
     private int localId;
@@ -49,6 +50,10 @@ public class Book {
 
     @SerializedName("availability")
     private Availability availability;
+
+    // ========== NEW FIELD FOR SORTING (POPULAR) ==========
+    @SerializedName("edition_count")
+    private Integer editionCount;
     // ======================================================
 
 
@@ -65,7 +70,10 @@ public class Book {
     public Integer getEbookCount() { return ebookCount; }
     public Availability getAvailability() { return availability; }
 
-    // Extract ID:  "/works/OL123123W" → "OL123123W"
+    // Getter untuk Edition Count (Penting untuk Sort Popular)
+    public Integer getEditionCount() { return editionCount; }
+
+    // Helper: Extract ID:  "/works/OL123123W" → "OL123123W"
     public String getWorkId() {
         if (workKey == null) return null;
         return workKey.replace("/works/", "");
@@ -83,4 +91,5 @@ public class Book {
     public void setIa(List<String> ia) { this.ia = ia; }
     public void setEbookCount(Integer ebookCount) { this.ebookCount = ebookCount; }
     public void setAvailability(Availability availability) { this.availability = availability; }
+    public void setEditionCount(Integer editionCount) { this.editionCount = editionCount; }
 }
