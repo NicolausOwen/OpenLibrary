@@ -1,10 +1,11 @@
 package com.kelompok5.openlibrary.ui.library;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.graphics.Typeface;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,7 +69,7 @@ public class LibraryFragment extends Fragment {
 
         observeData();
 
-        switchToFavoritesTab(); // default tab
+        switchToFavoritesTab();
 
         return view;
     }
@@ -77,10 +78,6 @@ public class LibraryFragment extends Fragment {
         tvFavoritesTab.setOnClickListener(v -> switchToFavoritesTab());
         tvHistoryTab.setOnClickListener(v -> switchToHistoryTab());
     }
-
-    // ------------------------------------------------------------------------
-    // TABS
-    // ------------------------------------------------------------------------
 
     private void switchToFavoritesTab() {
         isFavoritesTabActive = true;
@@ -122,10 +119,6 @@ public class LibraryFragment extends Fragment {
         indicator.setVisibility(View.INVISIBLE);
     }
 
-    // ------------------------------------------------------------------------
-    // OBSERVER
-    // ------------------------------------------------------------------------
-
     private void observeData() {
 
         viewModel.getFavorites().observe(getViewLifecycleOwner(), list -> {
@@ -148,10 +141,6 @@ public class LibraryFragment extends Fragment {
             }
         });
     }
-
-    // ------------------------------------------------------------------------
-    // BOOK COUNT
-    // ------------------------------------------------------------------------
 
     private void updateBooksCount(int count) {
         tvBooksCount.setText(count + (count == 1 ? " Book" : " Books"));

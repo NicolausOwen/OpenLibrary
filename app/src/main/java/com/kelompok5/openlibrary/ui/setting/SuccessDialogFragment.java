@@ -1,4 +1,4 @@
-package com.kelompok5.openlibrary.ui.main;
+package com.kelompok5.openlibrary.ui.setting;
 
 import android.app.Dialog;
 import android.graphics.Color;

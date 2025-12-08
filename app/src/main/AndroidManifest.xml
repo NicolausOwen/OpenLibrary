@@ -15,31 +15,45 @@
         android:theme="@style/Theme.OpenLibrary"
         tools:targetApi="31">
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
+        <!-- Login -->
         <activity
             android:name=".ui.main.LoginActivity"
             android:exported="false" />
 
+        <!-- Register -->
         <activity
             android:name=".ui.main.RegisterActivity"
             android:exported="false" />
 
+        <!-- Book Detail -->
         <activity
             android:name=".ui.book.BookDetailActivity"
             android:exported="false" />
 
+        <!-- Search Page -->
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false"/>
+
+        <!-- Search Page -->
+        <activity
+            android:name=".ui.category.CategoryResultActivity"
+            android:exported="false"/>
+
+        <!-- Account Settings -->
+        <activity
+            android:name=".ui.setting.AccountSettingsActivity"
+            android:exported="false" />
+
+        <!-- Main Activity (Launcher) -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
     </application>

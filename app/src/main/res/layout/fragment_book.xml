@@ -11,9 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- =========================
-             HEADER WITH GRADIENT PINK
-        ========================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,17 +19,6 @@
             android:padding="16dp"
             android:paddingBottom="20dp">
 
-            <!-- Status Bar Info -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:layout_marginBottom="8dp">
-
-            </LinearLayout>
-
-            <!-- Greeting -->
             <TextView
                 android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
@@ -40,7 +26,8 @@
                 android:text="Hi, Emir"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"/>
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="24dp"/>
 
             <TextView
                 android:id="@+id/tvSubGreeting"
@@ -52,35 +39,45 @@
                 android:alpha="0.9"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Search Bar -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/cvSearchTrigger"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 app:cardElevation="4dp"
-                app:cardCornerRadius="24dp">
+                app:cardCornerRadius="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:queryHint="Search for book or e-library"
-                    android:iconifiedByDefault="false"/>
-            </androidx.cardview.widget.CardView>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp">
 
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_search_pink"
+                        app:tint="#757575"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Search for book or e-library"
+                        android:textColor="#757575"
+                        android:layout_marginStart="12dp"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- =========================
-             CONTENT SECTION
-        ========================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- =========================
-                 CONTINUE READING
-            ========================== -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,16 +114,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="12dp"
-                        android:paddingEnd="0dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvContinueTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="FILOSOFI TERAS"
+                            android:text="Loading Title..."
                             android:textStyle="bold"
-                            android:textSize="16sp"
                             android:textColor="#000000"
                             android:layout_marginBottom="4dp"/>
 
@@ -134,20 +129,15 @@
                             android:id="@+id/tvContinueDesc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Lebih dari 2.000 tahun lalu, sebuah mazhab filsafat menemukan akar masalah dan juga solusi dari banyak emosi negatif. Stoalisme, atau Filosofi ..."
+                            android:text="Author Name"
                             android:textSize="12sp"
                             android:textColor="#666666"
                             android:maxLines="4"
-                            android:ellipsize="end"
-                            android:lineSpacingExtra="2dp"/>
+                            android:ellipsize="end"/>
                     </LinearLayout>
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
-            <!-- =========================
-                 CATEGORY
-            ========================== -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -157,7 +147,6 @@
                 android:textColor="#E91E63"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- Category Grid - 2 Rows only -->
             <GridLayout
                 android:id="@+id/categoryGrid"
                 android:layout_width="match_parent"
@@ -167,205 +156,79 @@
                 android:alignmentMode="alignMargins"
                 android:layout_marginBottom="24dp">
 
-                <!-- Row 1 -->
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
+                    android:id="@+id/cat_action"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_columnWeight="1" android:orientation="vertical"
+                    android:gravity="center" android:padding="8dp"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFE4E1"
+                        android:src="@drawable/ic_popular" android:layout_width="50dp"
+                        android:layout_height="50dp" android:backgroundTint="#FFE4E1"
                         android:padding="10dp"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Actions &amp;\nAdventure"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
+                        android:text="Actions &amp;\nAdventure" android:textSize="10sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:gravity="center" android:layout_marginTop="4dp"
+                        android:textColor="#333333" android:maxLines="2"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
+                    android:id="@+id/cat_antiques"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_columnWeight="1" android:orientation="vertical"
+                    android:gravity="center" android:padding="8dp"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFD4D4"
+                        android:src="@drawable/ic_popular" android:layout_width="50dp"
+                        android:layout_height="50dp" android:backgroundTint="#FFD4D4"
                         android:padding="10dp"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Antiques &amp;\nCollectibles"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
+                        android:text="Antiques" android:textSize="10sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:gravity="center" android:layout_marginTop="4dp"
+                        android:textColor="#333333" android:maxLines="2"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
+                    android:id="@+id/cat_business"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_columnWeight="1" android:orientation="vertical"
+                    android:gravity="center" android:padding="8dp"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#D4F1D4"
+                        android:src="@drawable/ic_popular" android:layout_width="50dp"
+                        android:layout_height="50dp" android:backgroundTint="#D4F1D4"
                         android:padding="10dp"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Business &amp;\nEconomics"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
+                        android:text="Business" android:textSize="10sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:gravity="center" android:layout_marginTop="4dp"
+                        android:textColor="#333333" android:maxLines="2"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
+                    android:id="@+id/cat_computer"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_columnWeight="1" android:orientation="vertical"
+                    android:gravity="center" android:padding="8dp"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#ADD8E6"
+                        android:src="@drawable/ic_popular" android:layout_width="50dp"
+                        android:layout_height="50dp" android:backgroundTint="#ADD8E6"
                         android:padding="10dp"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Computer"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
+                        android:text="Computer" android:textSize="10sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:gravity="center" android:layout_marginTop="4dp"
+                        android:textColor="#333333" android:maxLines="2"/>
                 </LinearLayout>
-
-                <!-- Row 2 -->
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
-                    <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFD4E5"
-                        android:padding="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Family &amp;\nRelationship"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
-                    <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFE4E1"
-                        android:padding="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fiction"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
-                    <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFDAB9"
-                        android:padding="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Engineering"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1">
-                    <ImageView
-                        android:src="@drawable/ic_popular"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:backgroundTint="#FFE4E1"
-                        android:padding="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See All"
-                        android:textSize="10sp"
-                        android:gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#333333"
-                        android:maxLines="2"/>
-                </LinearLayout>
-
             </GridLayout>
 
-            <!-- =========================
-                 RECOMMENDATION
-            ========================== -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -375,7 +238,6 @@
                 android:textColor="#E91E63"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- Horizontal RecyclerView for Books -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBooksHorizontal"
                 android:layout_width="match_parent"
@@ -383,9 +245,6 @@
                 android:orientation="horizontal"
                 android:clipToPadding="false"
                 android:paddingBottom="80dp"/>
-
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

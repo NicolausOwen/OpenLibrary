@@ -12,7 +12,6 @@ import com.kelompok5.openlibrary.R;
 import com.kelompok5.openlibrary.ui.book.BookFragment;
 import com.kelompok5.openlibrary.ui.library.LibraryFragment;
 import com.kelompok5.openlibrary.ui.setting.SettingFragment;
-import com.kelompok5.openlibrary.ui.main.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,6 +1,7 @@
 package com.kelompok5.openlibrary.ui.library;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.kelompok5.openlibrary.R;
 import com.kelompok5.openlibrary.data.model.FavoriteBook;
 import com.kelompok5.openlibrary.data.model.HistoryBook;
+import com.kelompok5.openlibrary.ui.book.BookDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +47,21 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
         String title = "Unknown Title";
         String author = "Unknown";
+        String workId = "";
         Integer cover = null;
 
         if (obj instanceof FavoriteBook) {
             FavoriteBook b = (FavoriteBook) obj;
+            workId = b.getId();
             if (b.getTitle() != null) title = b.getTitle();
-            if (b.getAuthor() != null) author = b.getAuthor();    // <-- pakai getAuthor()
-            cover = b.getCover();                                 // <-- pakai getCover()
+            if (b.getAuthor() != null) author = b.getAuthor();
+            cover = b.getCover();
         } else if (obj instanceof HistoryBook) {
             HistoryBook b = (HistoryBook) obj;
+            workId = b.getId();
             if (b.getTitle() != null) title = b.getTitle();
-            if (b.getAuthor() != null) author = b.getAuthor();    // <-- pakai getAuthor()
-            cover = b.getCover();                                 // <-- pakai getCover()
+            if (b.getAuthor() != null) author = b.getAuthor();
+            cover = b.getCover();
         }
 
         holder.title.setText(title);
@@ -72,6 +77,22 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         } else {
             holder.cover.setImageResource(R.drawable.ic_upcoming);
         }
+
+        // --------------------------------------------------------------------
+        // 🔥 ON CLICK → OPEN BookDetailActivity
+        // --------------------------------------------------------------------
+        String finalTitle = title;
+        Integer finalCover = cover;
+        String finalWorkId = workId;
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra(BookDetailActivity.EXTRA_WORK_ID, finalWorkId);
+            intent.putExtra(BookDetailActivity.EXTRA_TITLE, finalTitle);
+            intent.putExtra(BookDetailActivity.EXTRA_COVER_ID, finalCover != null ? finalCover : 0);
+
+            context.startActivity(intent);
+        });
     }
 
     @Override

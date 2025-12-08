@@ -1,15 +1,15 @@
 package com.kelompok5.openlibrary.ui.book;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,19 +19,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kelompok5.openlibrary.R;
 import com.kelompok5.openlibrary.data.model.Book;
 
+// === IMPORT ACTIVITY TUJUAN SUDAH DIAKTIFKAN ===
+import com.kelompok5.openlibrary.ui.search.SearchActivity;
+import com.kelompok5.openlibrary.ui.category.CategoryResultActivity; // Pastikan package ini benar
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookFragment extends Fragment {
 
     private BookViewModel viewModel;
-
-    private SearchView searchView;
     private RecyclerView rvHorizontalBooks;
     private CardView cardContinue;
-
     private BookAdapterHorizontal horizontalAdapter;
-
     private List<Book> allBooks = new ArrayList<>();
 
     @Nullable
@@ -43,15 +43,24 @@ public class BookFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book, container, false);
 
         // =============================
-        // INIT VIEW
+        // 1. NAVIGASI SEARCH
         // =============================
-        searchView = view.findViewById(R.id.searchView);
-        rvHorizontalBooks = view.findViewById(R.id.rvBooksHorizontal);
-        cardContinue = view.findViewById(R.id.cardContinueReading);
+        CardView cvSearchTrigger = view.findViewById(R.id.cvSearchTrigger);
+        cvSearchTrigger.setOnClickListener(v -> {
+            // === INTENT SEARCH SUDAH AKTIF ===
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
+        });
+
+        // =============================
+        // 2. NAVIGASI KATEGORI
+        // =============================
+        setupCategoryClicks(view);
 
         // =============================
         // SETUP RECYCLER HORIZONTAL
         // =============================
+        rvHorizontalBooks = view.findViewById(R.id.rvBooksHorizontal);
         rvHorizontalBooks.setLayoutManager(
                 new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false)
         );
@@ -59,13 +68,10 @@ public class BookFragment extends Fragment {
         rvHorizontalBooks.setAdapter(horizontalAdapter);
 
         // =============================
-        // INIT VIEWMODEL
+        // VIEWMODEL & DATA
         // =============================
         viewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
-        // =============================
-        // OBSERVE BUKU DARI ROOM
-        // =============================
         viewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
             if (books != null) {
                 allBooks = books;
@@ -73,38 +79,48 @@ public class BookFragment extends Fragment {
             }
         });
 
-        // =============================
-        // OBSERVE ERROR
-        // =============================
         viewModel.getError().observe(getViewLifecycleOwner(), err -> {
             if (err != null) {
                 Toast.makeText(getContext(), err, Toast.LENGTH_SHORT).show();
             }
         });
 
-        // =============================
-        // SEARCH VIEW
-        // =============================
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!query.isEmpty()) {
-                    viewModel.searchBooks(query);
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        // =============================
-        // LOAD DEFAULT
-        // =============================
+        // Load data awal
         viewModel.searchBooks("programming");
 
         return view;
+    }
+
+    private void setupCategoryClicks(View view) {
+        // Action & Adventure
+        LinearLayout catAction = view.findViewById(R.id.cat_action);
+        if (catAction != null) {
+            catAction.setOnClickListener(v -> openCategoryResult("Actions & Adventure"));
+        }
+
+        // Antiques
+        LinearLayout catAntiques = view.findViewById(R.id.cat_antiques);
+        if (catAntiques != null) {
+            catAntiques.setOnClickListener(v -> openCategoryResult("Antiques"));
+        }
+
+        // Business
+        LinearLayout catBusiness = view.findViewById(R.id.cat_business);
+        if (catBusiness != null) {
+            catBusiness.setOnClickListener(v -> openCategoryResult("Business & Economics"));
+        }
+
+        // Computer
+        LinearLayout catComputer = view.findViewById(R.id.cat_computer);
+        if (catComputer != null) {
+            catComputer.setOnClickListener(v -> openCategoryResult("Computer"));
+        }
+    }
+
+    private void openCategoryResult(String categoryName) {
+        // === INTENT CATEGORY SUDAH AKTIF ===
+        Intent intent = new Intent(getActivity(), CategoryResultActivity.class);
+        intent.putExtra("EXTRA_CATEGORY_NAME", categoryName);
+        startActivity(intent);
     }
 }

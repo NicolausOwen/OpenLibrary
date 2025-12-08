@@ -25,7 +25,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_arrow_back"
-                    android:tint="@android:color/white"
+                    app:tint="@android:color/white"
                     android:layout_marginTop="18dp"
                     android:layout_marginStart="16dp"
                     android:clickable="true"
@@ -63,45 +63,61 @@
                     android:paddingBottom="24dp">
 
                     <TextView
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Email" android:textColor="@color/text_primary"
-                        android:textSize="14sp" android:layout_marginTop="8dp"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="8dp"/>
+
                     <EditText
-                        android:id="@+id/et_email" android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:hint="M Emirshah Yusuf"
-                        android:inputType="textEmailAddress" android:background="@drawable/bottom_border_edittext"
-                        android:paddingVertical="8dp" android:textSize="16sp" android:textColor="@color/text_primary"/>
+                        android:id="@+id/et_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Full Name"
+                        android:inputType="textPersonName"
+                        android:background="@drawable/bottom_border_edittext"
+                        android:paddingVertical="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"/>
 
                     <TextView
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Password" android:textColor="@color/text_primary"
-                        android:textSize="14sp" android:layout_marginTop="24dp"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="8dp"/>
+
                     <EditText
-                        android:id="@+id/et_password" android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:hint="*********"
-                        android:inputType="textPassword" android:background="@drawable/bottom_border_edittext"
-                        android:paddingVertical="8dp" android:textSize="16sp" android:textColor="@color/text_primary"/>
+                        android:id="@+id/et_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="contoh@email.com"
+                        android:inputType="textEmailAddress"
+                        android:background="@drawable/bottom_border_edittext"
+                        android:paddingVertical="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"/>
 
                     <TextView
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Date Of Birth" android:textColor="@color/text_primary"
-                        android:textSize="14sp" android:layout_marginTop="24dp"/>
-                    <Spinner
-                        android:id="@+id/sp_dob" android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:entries="@array/dummy_dob_array"
-                        android:background="@drawable/bottom_border_edittext"
-                        android:paddingVertical="8dp" android:spinnerMode="dropdown"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Password"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="24dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Country Region" android:textColor="@color/text_primary"
-                        android:textSize="14sp" android:layout_marginTop="24dp"/>
-                    <Spinner
-                        android:id="@+id/sp_country" android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:entries="@array/dummy_country_array"
+                    <EditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="*********"
+                        android:inputType="textPassword"
                         android:background="@drawable/bottom_border_edittext"
-                        android:paddingVertical="8dp" android:spinnerMode="dropdown"
-                        android:layout_marginBottom="40dp"/>
+                        android:paddingVertical="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"/>
 
                     <Button
                         android:id="@+id/btn_confirm"
@@ -110,11 +126,14 @@
                         android:text="Confirm"
                         android:textSize="18sp"
                         android:textStyle="bold"
+
                         android:textColor="@android:color/white"
+                        app:backgroundTint="@color/pink"
                         android:background="@drawable/bg_button_filled"
-                        android:backgroundTint="@null"
+
                         android:paddingVertical="12dp"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginBottom="12dp"
                         android:textAllCaps="false"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -158,6 +177,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white"
-        app:menu="@menu/bottom_nav"/>
+        app:menu="@menu/bottom_nav"
+        app:itemIconTint="@color/pink"
+        app:itemTextColor="@color/pink"/>
 
 </RelativeLayout>
