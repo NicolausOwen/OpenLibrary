@@ -59,6 +59,10 @@
             android:name=".ui.setting.AccountSettingsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.setting.AboutUsActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

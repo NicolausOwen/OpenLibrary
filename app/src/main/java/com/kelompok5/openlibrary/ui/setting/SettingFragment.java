@@ -54,11 +54,8 @@ public class SettingFragment extends Fragment {
         menuAboutUs = v.findViewById(R.id.menu_about_us);
         btnLogout = v.findViewById(R.id.btnLogout);
 
-        // 3. LOGIKA DATA USER (PENTING: Agar tidak kosong)
-        // Kita coba ambil langsung dari Firebase agar pasti muncul
         loadUserData();
 
-        // Opsi Tambahan: Jika ViewModel kamu sudah jalan, biarkan observe ini menyala
         // viewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
         //    if (name != null) tvUserName.setText(name);
         // });
@@ -74,8 +71,8 @@ public class SettingFragment extends Fragment {
         });
 
         menuAboutUs.setOnClickListener(view -> {
-            // TODO: Buka halaman About Us (Nanti bisa dibuat Activity baru)
-            Toast.makeText(getContext(), "About Us clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+            startActivity(intent);
         });
 
         btnLogout.setOnClickListener(view -> showLogoutDialog());
@@ -85,17 +82,12 @@ public class SettingFragment extends Fragment {
     private void loadUserData() {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-            // Set Email
             String email = user.getEmail();
             tvUserEmail.setText(email);
 
-            // Set Nama
-            // Jika user punya DisplayName di Firebase, pakai itu.
-            // Jika tidak, ambil nama depan dari email.
             if (user.getDisplayName() != null && !user.getDisplayName().isEmpty()) {
                 tvUserName.setText(user.getDisplayName());
             } else {
-                // Contoh: budi@gmail.com -> Budi
                 if (email != null) {
                     String nameFromEmail = email.split("@")[0];
                     tvUserName.setText(capitalize(nameFromEmail));
@@ -106,7 +98,6 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    // Fungsi kecil untuk huruf besar di awal
     private String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1);
@@ -125,7 +116,6 @@ public class SettingFragment extends Fragment {
                 .show();
     }
 
-    // Agar data ter-refresh saat kembali dari halaman Edit Profile
     @Override
     public void onResume() {
         super.onResume();
