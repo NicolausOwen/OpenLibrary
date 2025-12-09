@@ -185,7 +185,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#FFF0F0"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/ic_map"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
@@ -223,7 +223,7 @@
                     app:cardElevation="2dp"
                     android:backgroundTint="#FFE8E8">
                     <ImageView
-                        android:src="@drawable/ic_popular"
+                        android:src="@drawable/ic_key"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
@@ -260,7 +260,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#FFF5E6"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/ic_money"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
@@ -297,7 +297,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#E3F2FD"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/ic_computer"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
@@ -334,7 +334,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#F3E5F5"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/ic_gear"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
@@ -371,7 +371,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#FFCCBC"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/ic_fam"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
@@ -445,7 +445,7 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#F3E5F5"> <ImageView
-                    android:src="@drawable/ic_popular"
+                    android:src="@drawable/see_all"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
