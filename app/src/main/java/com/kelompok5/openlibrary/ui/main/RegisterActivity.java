@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kelompok5.openlibrary.R;
-import com.kelompok5.openlibrary.ui.main.MainActivity;
-import com.kelompok5.openlibrary.ui.main.LoginActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,10 +48,16 @@ public class RegisterActivity extends AppCompatActivity {
         tvGoLogin = findViewById(R.id.tvGoLogin);
 
         btnRegister.setOnClickListener(v -> registerUser());
+
         tvGoLogin.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
         });
+
+        ImageView btnBack = findViewById(R.id.btnBack);
+        if(btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 
     private void registerUser() {
@@ -83,15 +89,11 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String uid = auth.getCurrentUser().getUid();
-
-                        // Save user profile to Firestore
                         saveUserToFirestore(uid, name, email);
                     } else {
                         progressBar.setVisibility(View.GONE);
                         btnRegister.setEnabled(true);
-                        Toast.makeText(this,
-                                "Register failed: " + task.getException().getMessage(),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Register failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -107,20 +109,35 @@ public class RegisterActivity extends AppCompatActivity {
                 .set(user)
                 .addOnSuccessListener(unused -> {
 
+                    if (auth.getCurrentUser() != null) {
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+                        auth.getCurrentUser().updateProfile(profileUpdates);
+                    }
+
                     progressBar.setVisibility(View.GONE);
                     btnRegister.setEnabled(true);
 
                     Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show();
 
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
                     btnRegister.setEnabled(true);
-                    Toast.makeText(this,
-                            "Failed to save user profile: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+
+
+                    Toast.makeText(this, "Profile save failed, redirecting...", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 });
     }
 }

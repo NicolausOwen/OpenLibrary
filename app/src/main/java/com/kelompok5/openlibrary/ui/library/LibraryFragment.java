@@ -16,13 +16,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kelompok5.openlibrary.R;
+// Pastikan ini mengarah ke BookViewModel kamu yang ada datanya
+import com.kelompok5.openlibrary.ui.book.BookViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryFragment extends Fragment {
 
-    private LibraryViewModel viewModel;
+    // Gunakan BookViewModel karena disitulah logic database kamu berada
+    private BookViewModel viewModel;
+
     private LibraryAdapter favAdapter, historyAdapter;
 
     private RecyclerView rvFavorites, rvHistory;
@@ -54,9 +58,11 @@ public class LibraryFragment extends Fragment {
         indicatorFavorites = view.findViewById(R.id.indicatorFavorites);
         indicatorHistory = view.findViewById(R.id.indicatorHistory);
 
+        // Setup Layout Manager
         rvFavorites.setLayoutManager(new GridLayoutManager(requireContext(), 3));
         rvHistory.setLayoutManager(new GridLayoutManager(requireContext(), 3));
 
+        // Setup Adapter
         favAdapter = new LibraryAdapter(requireContext());
         historyAdapter = new LibraryAdapter(requireContext());
 
@@ -65,10 +71,12 @@ public class LibraryFragment extends Fragment {
 
         setupTabListeners();
 
-        viewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
+        // PENTING: Pakai BookViewModel agar data history/favorit muncul
+        viewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
         observeData();
 
+        // Default tab
         switchToFavoritesTab();
 
         return view;
@@ -79,18 +87,19 @@ public class LibraryFragment extends Fragment {
         tvHistoryTab.setOnClickListener(v -> switchToHistoryTab());
     }
 
+    // === LOGIKA PINDAH TAB (DIPERBAIKI) ===
     private void switchToFavoritesTab() {
         isFavoritesTabActive = true;
 
         highlightSelected(tvFavoritesTab, indicatorFavorites);
         unhighlight(tvHistoryTab, indicatorHistory);
 
-        rvFavorites.setVisibility(View.VISIBLE);
+        // UI Dasar: Tampilkan Recycler Favorit, Sembunyikan History
         rvHistory.setVisibility(View.GONE);
+        tvEmptyHistory.setVisibility(View.GONE);
 
-        tvEmptyFavorite.setVisibility(favAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-
-        updateBooksCount(favAdapter.getItemCount());
+        // Cek data untuk menentukan apakah List atau Text Kosong yang muncul
+        refreshEmptyState();
     }
 
     private void switchToHistoryTab() {
@@ -99,12 +108,42 @@ public class LibraryFragment extends Fragment {
         highlightSelected(tvHistoryTab, indicatorHistory);
         unhighlight(tvFavoritesTab, indicatorFavorites);
 
-        rvHistory.setVisibility(View.VISIBLE);
+        // UI Dasar: Tampilkan Recycler History, Sembunyikan Favorit
         rvFavorites.setVisibility(View.GONE);
+        tvEmptyFavorite.setVisibility(View.GONE);
 
-        tvEmptyHistory.setVisibility(historyAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        // Cek data
+        refreshEmptyState();
+    }
 
-        updateBooksCount(historyAdapter.getItemCount());
+    // === LOGIKA CEK DATA KOSONG (DIPERBAIKI) ===
+    private void refreshEmptyState() {
+        if (isFavoritesTabActive) {
+            int count = favAdapter.getItemCount();
+
+            if (count > 0) {
+                // Ada Data: Munculkan List, HILANGKAN Text Kosong
+                rvFavorites.setVisibility(View.VISIBLE);
+                tvEmptyFavorite.setVisibility(View.GONE);
+            } else {
+                // Kosong: HILANGKAN List, Munculkan Text Kosong
+                rvFavorites.setVisibility(View.GONE);
+                tvEmptyFavorite.setVisibility(View.VISIBLE);
+            }
+            updateBooksCount(count);
+
+        } else {
+            int count = historyAdapter.getItemCount();
+
+            if (count > 0) {
+                rvHistory.setVisibility(View.VISIBLE);
+                tvEmptyHistory.setVisibility(View.GONE);
+            } else {
+                rvHistory.setVisibility(View.GONE);
+                tvEmptyHistory.setVisibility(View.VISIBLE);
+            }
+            updateBooksCount(count);
+        }
     }
 
     private void highlightSelected(TextView tab, View indicator) {
@@ -120,24 +159,25 @@ public class LibraryFragment extends Fragment {
     }
 
     private void observeData() {
-
+        // Observe Favorites
         viewModel.getFavorites().observe(getViewLifecycleOwner(), list -> {
             List<Object> temp = new ArrayList<>(list);
-            favAdapter.setBooks(temp);
+            favAdapter.setBooks(temp); // Masukkan data ke adapter
 
+            // Jika sedang di tab favorit, refresh tampilan kosong/isi
             if (isFavoritesTabActive) {
-                tvEmptyFavorite.setVisibility(temp.isEmpty() ? View.VISIBLE : View.GONE);
-                updateBooksCount(temp.size());
+                refreshEmptyState();
             }
         });
 
+        // Observe History
         viewModel.getHistory().observe(getViewLifecycleOwner(), list -> {
             List<Object> temp = new ArrayList<>(list);
-            historyAdapter.setBooks(temp);
+            historyAdapter.setBooks(temp); // Masukkan data ke adapter
 
+            // Jika sedang di tab history, refresh tampilan kosong/isi
             if (!isFavoritesTabActive) {
-                tvEmptyHistory.setVisibility(temp.isEmpty() ? View.VISIBLE : View.GONE);
-                updateBooksCount(temp.size());
+                refreshEmptyState();
             }
         });
     }

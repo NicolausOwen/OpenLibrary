@@ -4,24 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingTop="32dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp">
 
         <!-- Library Title -->
         <TextView
             android:text="Library"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#E91E63"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -39,7 +41,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
 
                 <TextView
                     android:id="@+id/tvFavoritesTab"
@@ -48,14 +54,16 @@
                     android:text="Favorites"
                     android:textColor="#E91E63"
                     android:textStyle="bold"
-                    android:textSize="14sp"
-                    android:paddingBottom="6dp" />
+                    android:textSize="15sp"
+                    android:paddingBottom="8dp"
+                    android:clickable="false"
+                    android:focusable="false" />
 
                 <!-- ACTIVE INDICATOR -->
                 <View
                     android:id="@+id/indicatorFavorites"
-                    android:layout_width="40dp"
-                    android:layout_height="2dp"
+                    android:layout_width="50dp"
+                    android:layout_height="3dp"
                     android:background="#E91E63"
                     android:visibility="visible" />
             </LinearLayout>
@@ -67,7 +75,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
 
                 <TextView
                     android:id="@+id/tvHistoryTab"
@@ -75,14 +87,16 @@
                     android:layout_height="wrap_content"
                     android:text="History"
                     android:textColor="#999999"
-                    android:textSize="14sp"
-                    android:paddingBottom="6dp" />
+                    android:textSize="15sp"
+                    android:paddingBottom="8dp"
+                    android:clickable="false"
+                    android:focusable="false" />
 
                 <!-- ACTIVE INDICATOR -->
                 <View
                     android:id="@+id/indicatorHistory"
-                    android:layout_width="40dp"
-                    android:layout_height="2dp"
+                    android:layout_width="50dp"
+                    android:layout_height="3dp"
                     android:background="#E91E63"
                     android:visibility="invisible" />
             </LinearLayout>
@@ -91,14 +105,21 @@
 
     </LinearLayout>
 
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0"/>
+
     <!-- CONTENT -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp">
 
         <!-- Count + Filter -->
         <LinearLayout
@@ -106,7 +127,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/tvBooksCount"
@@ -115,54 +136,66 @@
                 android:layout_weight="1"
                 android:text="0 Books"
                 android:textSize="14sp"
-                android:textColor="#666666" />
+                android:textColor="#666666"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ivFilter"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="#666666"/>
         </LinearLayout>
 
-        <!-- FAVORITES LIST -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFavorites"
+        <!-- Content Container -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"/>
+            android:layout_height="match_parent">
 
-        <!-- HISTORY LIST -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:visibility="gone" />
+            <!-- FAVORITES LIST -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="20dp"/>
 
-        <!-- EMPTY FAVORITES -->
-        <TextView
-            android:id="@+id/tvEmptyFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No favorites yet."
-            android:textSize="14sp"
-            android:textColor="#999999"
-            android:layout_gravity="center"
-            android:layout_marginTop="48dp"
-            android:visibility="gone"/>
+            <!-- HISTORY LIST -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="20dp"
+                android:visibility="gone" />
 
-        <!-- EMPTY HISTORY -->
-        <TextView
-            android:id="@+id/tvEmptyHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No reading history."
-            android:textSize="14sp"
-            android:textColor="#999999"
-            android:layout_gravity="center"
-            android:layout_marginTop="48dp"
-            android:visibility="gone"/>
+            <!-- EMPTY FAVORITES -->
+            <TextView
+                android:id="@+id/tvEmptyFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No favorites yet."
+                android:textSize="14sp"
+                android:textColor="#999999"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+            <!-- EMPTY HISTORY -->
+            <TextView
+                android:id="@+id/tvEmptyHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No reading history."
+                android:textSize="14sp"
+                android:textColor="#999999"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
